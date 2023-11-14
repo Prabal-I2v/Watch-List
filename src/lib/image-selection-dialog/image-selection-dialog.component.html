@@ -1,0 +1,161 @@
+<!-- <div class="dialog-content-wrapper" >
+    <mat-toolbar class="mat-accent m-0">
+        <mat-toolbar-row class="toolbar-row">
+            <span class="title dialog-title">Select Person</span>
+            <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <mat-dialog-content class="main-content">
+        <mat-radio-group [(ngModel)]="selectedImage">
+            <mat-radio-button class="radio-buttons" *ngFor="let embeddingData of embeddingDatas" [value]="embeddingData"><img [src]="'data:image/png;base64,' + embeddingData.img" style="height: 100px; width:100px"></mat-radio-button>
+          </mat-radio-group> -->
+<!-- <div *ngFor="let embeddingData of embeddingDatas" style="margin: 15px; user-select: auto;">
+            <img [src]="'data:image/png;base64,' + embeddingData.img" style="height: 100px; width:100px">
+        </div> -->
+<!-- </mat-dialog-content>
+
+    <div class="dialog-footer">
+        <button mat-raised-button (click)="onNextButtonClick()" [disabled]="!selectedImage"
+            color="primary" aria-label="NEXT" >
+            Next
+        </button>
+
+
+
+    </div>
+</div> -->
+
+<div style="display: flex; align-items: center; flex-direction: column; gap: 10px 20px; height: 100%;">
+    <ng-container *ngIf="!loading && isfirstTimeSearch">
+        <div
+            style="display: flex; padding: 0px 20px; flex-direction: column; justify-content: center; align-items: center; gap: 4px;">
+            <span
+                style="font-family: Proxima Nova; font-size: 24px; font-style: normal; font-weight: 500; line-height: 32px;">
+                {{embeddingDatas.length}} persons found
+            </span>
+            <span
+                style="text-align: center; font-family: Proxima Nova; font-size: 16px; font-style: normal; font-weight: 400; line-height: normal;">
+                Select a person which you want to process with that
+            </span>
+        </div>
+        <div
+            style="display: flex; align-items: center; gap: 20px; width: fit-content; overflow: auto; padding: 20px 10px; overflow: scroll; width: 100%;">
+            <div *ngFor="let embeddingData of embeddingDatas"
+                style=" display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                <div style=" width: 120px; height: 120px; border-radius: 8px; border: 1px solid #E6EBF2; background: url(data:image/png;base64,{{embeddingData.img}}); background-size: contain; background-position: center; background-repeat: no-repeat;"
+                    [ngClass]="{'selectedPhoto' : selectedImage == embeddingData}">
+                </div>
+                <button *ngIf="selectedImage != embeddingData" class="i2v-btn primary-outline medium"
+                    (click)="selectImage(embeddingData)">Select</button>
+                <button *ngIf="selectedImage == embeddingData"
+                    class="flex-row-center-center i2v-btn primary-outline medium right-icon" libSvgElement
+                    [appSvg]="'assets/Outline/check-circle.svg'" [fill-color]="'0099ED'">Selected</button>
+            </div>
+        </div>
+        <div>
+            <span
+                style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; flex: 1">
+                <label style="display: flex; align-items: center; gap: 4px; text-wrap: nowrap;"
+                    class="form-label medium">
+                    Select match %
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M8.00016 9.22342C8.33837 9.22342 8.61805 8.94374 8.61805 8.60553V5.58114C8.61805 5.24293 8.33837 4.96325 8.00016 4.96325C7.66195 4.96325 7.38228 5.24293 7.38228 5.58114V8.60553C7.38228 8.94374 7.66195 9.22342 8.00016 9.22342Z"
+                            fill="#5F6F94" />
+                        <path
+                            d="M8.00016 1.33398C4.32537 1.33398 1.3335 4.32585 1.3335 8.00065C1.3335 11.6754 4.32537 14.6673 8.00016 14.6673C11.675 14.6673 14.6668 11.6754 14.6668 8.00065C14.6668 4.32585 11.675 1.33398 8.00016 1.33398ZM8.00016 13.4315C5.00179 13.4315 2.56927 10.9925 2.56927 8.00065C2.56927 5.00878 5.00179 2.56976 8.00016 2.56976C10.9985 2.56976 13.4311 5.00878 13.4311 8.00065C13.4311 10.9925 10.992 13.4315 8.00016 13.4315Z"
+                            fill="#5F6F94" />
+                        <path
+                            d="M8.55301 9.88033V9.86732C8.48146 9.80228 8.39691 9.75025 8.30585 9.71122C8.11724 9.63317 7.90911 9.63317 7.72049 9.71122C7.62943 9.75025 7.55138 9.80228 7.47333 9.86732V9.88033C7.40829 9.95187 7.35626 10.0364 7.31724 10.1275C7.27821 10.2185 7.2587 10.3161 7.2587 10.4202C7.2587 10.5242 7.27821 10.6218 7.31724 10.7128C7.35626 10.8169 7.40829 10.8885 7.47333 10.96V10.973C7.54488 11.038 7.62943 11.0901 7.72049 11.1291C7.81155 11.1681 7.90911 11.1876 8.01317 11.1876C8.11724 11.1876 8.2148 11.1616 8.30585 11.1291C8.39691 11.0901 8.47496 11.038 8.55301 10.973V10.96C8.61805 10.8885 8.67008 10.8104 8.70911 10.7128C8.74813 10.6218 8.76764 10.5242 8.76764 10.4202C8.76764 10.3161 8.74163 10.2185 8.70911 10.1275C8.67008 10.0364 8.61805 9.95838 8.55301 9.88033Z"
+                            fill="#5F6F94" />
+                    </svg>
+                </label>
+
+                <select class="custom-select" name="gender" style="width: 100%;" [(ngModel)]="matchPercentage">
+                    <option [value]="10">10</option>
+                    <option [value]="20">20</option>
+                    <option [value]="40">40</option>
+                    <option [value]="80">80</option>
+                    <option [value]="100">100</option>
+                </select>
+            </span>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="!isfirstTimeSearch">
+        <div style="display: flex; flex-direction: column; width: 100%;">
+            <span style="font-size: 16px; font-style: normal; font-weight: 500; line-height: normal; ">Click on the
+                image you would like to search for</span>
+            <div style="display: flex; width: 100%; gap: 12px;">
+                <div
+                    style="display: flex; align-items: center; gap: 12px; width: fit-content; overflow: scroll; padding: 10px 0px;">
+                    <div *ngFor="let embeddingData of embeddingDatas"
+                        style=" display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                        <div style=" width: 80px; height: 80px; border-radius: 8px; border: 1px solid #E6EBF2; background: url(data:image/png;base64,{{embeddingData.img}}); background-size: contain; background-position: center; background-repeat: no-repeat;"
+                            [ngClass]="{'selectedPhoto' : selectedImage == embeddingData, 'nonSelectedPhoto' : selectedImage !== embeddingData}"
+                            (click)="selectImage(embeddingData); onSearchButtonClick();">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <span
+                        style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; flex: 1; padding: 10px;">
+                        <label style="display: flex; align-items: center; gap: 4px; text-wrap: nowrap;"
+                            class="form-label medium">
+                            Select match %
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M8.00016 9.22342C8.33837 9.22342 8.61805 8.94374 8.61805 8.60553V5.58114C8.61805 5.24293 8.33837 4.96325 8.00016 4.96325C7.66195 4.96325 7.38228 5.24293 7.38228 5.58114V8.60553C7.38228 8.94374 7.66195 9.22342 8.00016 9.22342Z"
+                                    fill="#5F6F94" />
+                                <path
+                                    d="M8.00016 1.33398C4.32537 1.33398 1.3335 4.32585 1.3335 8.00065C1.3335 11.6754 4.32537 14.6673 8.00016 14.6673C11.675 14.6673 14.6668 11.6754 14.6668 8.00065C14.6668 4.32585 11.675 1.33398 8.00016 1.33398ZM8.00016 13.4315C5.00179 13.4315 2.56927 10.9925 2.56927 8.00065C2.56927 5.00878 5.00179 2.56976 8.00016 2.56976C10.9985 2.56976 13.4311 5.00878 13.4311 8.00065C13.4311 10.9925 10.992 13.4315 8.00016 13.4315Z"
+                                    fill="#5F6F94" />
+                                <path
+                                    d="M8.55301 9.88033V9.86732C8.48146 9.80228 8.39691 9.75025 8.30585 9.71122C8.11724 9.63317 7.90911 9.63317 7.72049 9.71122C7.62943 9.75025 7.55138 9.80228 7.47333 9.86732V9.88033C7.40829 9.95187 7.35626 10.0364 7.31724 10.1275C7.27821 10.2185 7.2587 10.3161 7.2587 10.4202C7.2587 10.5242 7.27821 10.6218 7.31724 10.7128C7.35626 10.8169 7.40829 10.8885 7.47333 10.96V10.973C7.54488 11.038 7.62943 11.0901 7.72049 11.1291C7.81155 11.1681 7.90911 11.1876 8.01317 11.1876C8.11724 11.1876 8.2148 11.1616 8.30585 11.1291C8.39691 11.0901 8.47496 11.038 8.55301 10.973V10.96C8.61805 10.8885 8.67008 10.8104 8.70911 10.7128C8.74813 10.6218 8.76764 10.5242 8.76764 10.4202C8.76764 10.3161 8.74163 10.2185 8.70911 10.1275C8.67008 10.0364 8.61805 9.95838 8.55301 9.88033Z"
+                                    fill="#5F6F94" />
+                            </svg>
+                        </label>
+
+                        <select class="custom-select" name="gender" style="width: 100%;" [(ngModel)]="matchPercentage" (change)="onSearchButtonClick()">
+                            <option [value]="'10'">10</option>
+                            <option [value]="'20'">20</option>
+                            <option [value]="'40'">40</option>
+                            <option [value]="'80'">80</option>
+                            <option [value]="'100'">100</option>
+                        </select>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="watchlist-data-container" *ngIf="!loading"
+            style="overflow-x: hidden; height: 100%; flex: 1; display: flex; flex-direction: column; background-color: #fff;">
+            <div *ngIf="!isDataExist" class="nowatchlistexist">
+                <div class="logo-container large flex-row-center-center i2v-btn-icon tertiary-default" libSvgElement
+                    [appSvg]="'assets/Outline/table.svg'" [size]="'48'" [fill-color]="'white'"></div>
+                <span class="major-heading">No data found</span>
+                <span class="minor-heading">Try to adjust your search to find what you’re looking for</span>
+            </div>
+            <lib-kendo-grid *ngIf="isDataExist" class="watchlistexist" style="height:100%" #Grid [idx]="'watchList'"
+                [data]="kendoData" [configuration]="configuration" (pageChange)="pageChange($event)"></lib-kendo-grid>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="loading">
+        <div style="display: flex;
+        width: 360px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        flex: 1;">
+            <span
+                style="width: 150px; height: 150px; background: url(assets/gifs/enrollment-progress.gif) no-repeat center;">
+            </span>
+        </div>
+    </ng-container>
+    
+</div>

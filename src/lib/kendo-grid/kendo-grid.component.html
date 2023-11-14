@@ -1,0 +1,122 @@
+<kendo-grid #kendoGrid style="height:100%" [data]="gridView" kendoGridSelectBy="id" [pageSize]="configuration.pageLimit"
+    [pageable]="configuration.pagination" [sortable]="true" [reorderable]="true" [resizable]="true" [skip]="skip"
+    [columnMenu]="{ filter: true }" (pageChange)="pageChange($event)" (selectionChange)="onSelectRow($event)" [selectedKeys]="SelectedRows">
+
+    <kendo-grid-checkbox-column [width]="40" [columnMenu]="false">
+        <ng-template kendoGridHeaderTemplate let-dataItem>
+            <input class="i2v-checkbox secondary-default"
+                type="checkbox" 
+                name="selectAll"
+                (change)="selectAllRows($event)" 
+                [checked]="allRowsSelected"/>
+        </ng-template>
+    </kendo-grid-checkbox-column>
+    <ng-container *ngFor="let item of configuration.columnDefs">
+        
+        <kendo-grid-column [field]="item.field" [title]="item.headerName" [filter]="item.dataType" [columnMenu]="false" [width]="item.width">
+
+            <ng-template *ngIf="item.field== 'videoSourceIds'" kendoGridCellTemplate let-dataItem>
+                <span class="i2v-chips large secondary-outline-active" style="margin: 3px;" *ngFor="let name of SetAttachedCamera(dataItem[item.field])">{{name}}</span>
+            </ng-template>
+            <ng-template *ngIf="item.cellRenderer == 'dateRender'" kendoGridCellTemplate let-dataItem>
+                <p>{{UnixToDateConverter(GetFieldValue(dataItem,item.field))}}</p>
+            </ng-template>
+            <!-- for header Gender -->
+            <ng-template *ngIf="item.headerName == 'Gender'" kendoGridCellTemplate let-dataItem>
+                <span class="i2v-chips large secondary-default">{{dataItem[item.field]}}</span>
+            </ng-template>
+            <ng-template *ngIf="item.headerName == 'Label'" kendoGridCellTemplate let-dataItem>
+            <span class="i2v-chips large secondary-outline-active">{{dataItem[item.field]}}</span>
+            </ng-template>
+            <ng-template
+                *ngIf="item.headerName=='Image' || item.headerName=='Full Image'"
+                kendoGridCellTemplate let-dataItem>
+                <img style="height:100%;border-radius: 4px;object-fit: contain;" [src]="dataItem.image"
+                    [ngStyle]='{"max-height":  "100px"}' alt="no-image" (error) ="onImgError($event)"/>
+            </ng-template>
+            <ng-template *ngIf=" item.headerName=='ProvidedImage' || item.headerName=='providedImage'"
+                kendoGridCellTemplate let-dataItem>
+                <img style="height:100%;width:100%;border-radius: 4px;object-fit: contain;" [src]="dataItem.providedImage"
+                    [ngStyle]='{"max-height":  "100px"}' alt="no-image" (error) ="onImgError($event)"/>
+            </ng-template>
+            <ng-template *ngIf="item.headerName == 'Attributes'" kendoGridCellTemplate let-dataItem>
+                <div *ngIf="dataItem.attributes as attributes" >
+                    <ng-container *ngFor="let attr of attributes | keyvalue">
+                       <p>{{ attr.key }}: {{ attr.value }}</p> 
+                    </ng-container>
+                </div>
+                <ng-container *ngIf="(dataItem.attributes| json) == '{}'">
+                    <p>No Attributes Found</p>
+                </ng-container>
+            </ng-template>
+
+            <ng-template *ngIf="item.headerName=='Top Results' " kendoGridCellTemplate let-dataItem>
+                <img style="height:52px;width:91px;border-radius: 4px;"
+                    [src]="dataItem.referenceImage" [ngStyle]='{"max-height":  "100px"}' (error) ="onImgError($event)"
+                    alt="no-image" />
+            </ng-template>
+
+            <ng-template *ngIf="item.headerName=='Match%' " kendoGridCellTemplate let-dataItem>
+                <span>{{dataItem.scores*100 | number : '1.0-0'}}%</span>
+            </ng-template>
+
+            <ng-template *ngIf="item.cellRenderer == 'buttonRenderer'" kendoGridCellTemplate let-dataItem>
+                <div class="ActionButtons">
+                    <button class="flex-row-center-center i2v-btn-icon secondary-outline large" libSvgElement
+                        style="display: inline-flex; margin-right: 10px;" [appSvg]="'assets/Outline/clock.svg'"
+                        matTooltip="Person timeline" (click)="onActionButtonClick('timeline',dataItem.id)">
+                    </button>
+                    <button class="flex-row-center-center i2v-btn-icon secondary-outline large" libSvgElement
+                        style="display: inline-flex; margin-right: 10px;" [appSvg]="'assets/Outline/pencil.svg'"
+                        matTooltip="Edit Person" (click)="onActionButtonClick('edit',dataItem.id)">
+                    </button>
+                    <button class="flex-row-center-center i2v-btn-icon secondary-outline large" libSvgElement
+                        style="display: inline-flex; margin-right: 10px;" [appSvg]="'assets/Outline/trash.svg'"
+                        matTooltip="Delete Person" (click)="onActionButtonClick('delete',dataItem.id)">
+                    </button>
+                </div>
+
+            </ng-template>
+        </kendo-grid-column>
+
+    </ng-container>
+
+    <ng-container *ngFor="let item of configuration.columnDefs">
+        <kendo-grid-column [field]="item.field" [title]="item.headerName" [filter]="item.dataType">
+            <ng-template *ngIf="item.cellRenderer == 'dateRender'" kendoGridCellTemplate let-dataItem>
+                <p>{{UnixToDateConverter(GetFieldValue(dataItem,item.field))}}</p>
+            </ng-template>
+
+            <ng-template
+                *ngIf="item.headerName=='Image' || item.headerName=='Full Image' || item.headerName=='ProvidedImage' || item.headerName=='providedImage'"
+                kendoGridCellTemplate let-dataItem>
+                <img style="height:52px;width:91px;border-radius: 4px;" [src]="dataItem.providedImage"
+                    [ngStyle]='{"max-height":  "100px"}' alt="no-image" />
+            </ng-template>
+
+            <ng-template *ngIf="item.headerName=='Top Results' " kendoGridCellTemplate let-dataItem>
+                <img style="height:52px;width:91px;border-radius: 4px;" [src]="dataItem.referenceImage"
+                    [ngStyle]='{"max-height":  "100px"}' alt="no-image" />
+            </ng-template>
+
+            <ng-template *ngIf="item.headerName=='Match%' " kendoGridCellTemplate let-dataItem>
+               <span>{{dataItem.scores*100 | number : '1.0-0'}}%</span>
+            </ng-template>
+
+            <ng-template *ngIf="item.cellRenderer == 'buttonRenderer'" kendoGridCellTemplate let-dataItem>
+                <button mat-stroked-button (click)="onActionButtonClick('timeline',dataItem.id)" color="primary"
+                    style="margin:5px;height:40px; margin-left: 20px;"
+                    title="Show Timeline"><mat-icon>timeline</mat-icon></button>
+                <button mat-stroked-button (click)="onActionButtonClick('edit',dataItem.id)" color="primary"
+                    style="margin:5px;height:40px" title="Edit Person Detail"><mat-icon>edit</mat-icon></button>
+                <!-- <button mat-stroked-button (click)="onActionButtonClick('add',dataItem.id)" color="accent"
+                    style="margin:5px;height:40px" title="Add Face"><mat-icon>add</mat-icon></button> -->
+                <button mat-stroked-button (click)="onActionButtonClick('delete',dataItem.id)" color="warn"
+                    style="margin:5px;height:40px" title="Delete Person Detail"><mat-icon>delete</mat-icon></button>
+            </ng-template>
+        </kendo-grid-column>
+
+    </ng-container>
+
+
+</kendo-grid>

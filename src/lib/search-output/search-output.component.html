@@ -1,0 +1,64 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar class="mat-warn m-0">
+        <mat-toolbar-row style="display:flex;flex-direction:row;justify-content:space-between">
+            <span class="title dialog-title">Possible Matches</span>
+            <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-0 pb-0 m-0"
+        style="overflow:auto;padding-bottom:0px !important;padding:0px !important;user-select:none">
+        <form style="display:flex;flex-direction:column">
+            <div style="display:flex;flex-direction:row;padding:12px;padding-bottom:0px" class="w-100-p">
+                <div style="width:30%;display:flex;flex-direction:column">
+                    <span style="padding-left:6px">Reference</span>
+                    <img style="width:150px;height:150px;margin:4px" [src]="reference" />
+                </div>
+                <div style="width:70%;display:flex;flex-direction:row">
+                    <div style="display:flex;flex-direction:column">
+                        <span style="padding-left:6px">Top Result</span>
+                        <img [src]="getImage(topMatch.facePoints.image)" style="width:150px;height:150px;margin:6px" />
+                    </div>
+                    <div style="display:flex;flex-direction:column;padding:12px;width:100%;margin:6px;margin-top:24px;">
+                        <div style=" display:flex;flex-direction:row">
+                            <span style="width:50%">Name :</span>
+                            <span style="width:50%">{{topMatch.personName}}</span>
+                        </div>
+                        <div style="display:flex;flex-direction:row">
+                            <span style="width:50%">Label :</span>
+                            <span style="width:50%">{{topMatch.label}}</span>
+                        </div>
+                        <div style="display:flex;flex-direction:row">
+                            <span style="width:50%">Gender :</span>
+                            <span style="width:50%">{{topMatch.gender}}</span>
+                        </div>
+                        <div style="display:flex;flex-direction:row">
+                            <span style="width:50%">Matching :</span>
+                            <span style="width:50%">{{matchingPercentage}}&nbsp; %</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--             <div style="display:flex;flex-direction:column;background-color:#cad1da;margin-top:8px;margin-bottom:6px;padding:12px"
+                class="w-100-p">
+                <div style="display:flex;flex-direction:row;justify-content:center">
+                    <span>More Results</span>
+                </div>
+                <div style="display:flex;flex-direction:row;">
+                    <div *ngFor="let match of matches"
+                        style="display:flex;flex-direction:column;padding:2px; margin-left:4px">
+                        <div style="width:140px;display:flex;justify-content:space-between">
+                            <span style="padding:2px">{{match.personName}}</span>
+                            <span style="padding:2px">{{match.matchingPercentage}}&nbsp;%</span>
+                        </div>
+                    <img [src]="getImage(match.facePoints[0].image)" style="width:140px;height:140px;margin:5px;" />
+                    </div>
+
+                </div>
+
+            </div> -->
+        </form>
+    </div>
+</div>

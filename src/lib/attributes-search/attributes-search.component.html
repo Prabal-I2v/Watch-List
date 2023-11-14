@@ -1,0 +1,170 @@
+<form [formGroup]="attributesForm" style="display: flex; flex-direction: column; gap: 8px;">
+    <div style="display: flex; justify-content: center; gap: 8px;">
+        <span
+            style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; flex: 1;">
+            <label class="form-label medium">Key<span style="color: red;font-size: 12px;">
+                    {{newKey == "" ? '* Required' : ''}}
+                </span></label>
+            <input style="width: 100%;" class="i2v-input primary-default medium" type="text" [(ngModel)]="newKey"
+                placeholder="Enter Key" [ngModelOptions]="{standalone: true}" />
+        </span>
+
+        <span
+            style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; flex: 1;">
+            <label class="form-label medium" style="text-wrap:nowrap">Value Type<span
+                    style="color: red;font-size: 12px;">
+                    {{newValueType == "" ? '* Required' : ''}}
+                </span></label>
+            <select style="width: 100%;" class="custom-select" [(ngModel)]="newValueType"
+                [ngModelOptions]="{standalone: true}">
+                <option *ngFor="let type of valueTypes" [value]="type">{{ type }}
+                </option>
+            </select>
+        </span>
+
+        <span
+            style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; flex: 1;">
+            <label class="form-label medium">Condition<span style="color: red;font-size: 12px;">
+                    {{newCondition == "" ? '* Required' : ''}}
+                </span></label>
+            <select style="width: 100%;" class="custom-select" [(ngModel)]="newCondition"
+                [ngModelOptions]="{standalone: true}">
+                <option *ngFor="let conditon of conditions[newValueType]" [value]="conditon">{{ conditon }}
+                </option>
+            </select>
+        </span>
+
+        <span
+            style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; flex: 1;">
+            <label class="form-label medium">Value<span style="color: red;font-size: 12px;">
+                    {{newValue == "" ? '* Required' : ''}}
+                </span></label>
+            <ng-container [ngSwitch]="newValueType">
+                <input style="width: 100%;" class="i2v-input primary-default medium" *ngSwitchCase="'String'"
+                    placeholder="Enter Value" type="text" [(ngModel)]="newValue"
+                    [ngModelOptions]="{standalone: true}" />
+                <input style="width: 100%;" class="i2v-input primary-default medium" *ngSwitchCase="'Number'"
+                    placeholder="Enter Value" type="number" [(ngModel)]="newValue"
+                    [ngModelOptions]="{standalone: true}" />
+                <select style="width: 100%;" class="custom-select" *ngSwitchCase="'Boolean'" [(ngModel)]="newValue"
+                    [ngModelOptions]="{standalone: true}">
+                    <option selected [value]="true">True</option>
+                    <option [value]="false">False</option>
+                </select>
+            </ng-container>
+        </span>
+
+        <div style="display: flex; align-items: flex-end;">
+            <button class="flex-row-center-center i2v-btn-icon tertiary-default large" libSvgElement
+                [appSvg]="'assets/Outline/plus.svg'" (click)="addAttribute()"></button>
+        </div>
+    </div>
+    <span style="font-weight: 700;">Existing Attributes</span>
+    <div style="display: flex; justify-content: center; gap: 8px;" *ngIf="UniqueAttributes.length>0">
+        <span
+            style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; flex: 1;">
+            <label class="form-label medium">Key</label>
+            <select style="width: 100%;" class="i2v-input primary-default medium" type="text" [(ngModel)]="ExistingKey"
+                placeholder="Enter Key" [ngModelOptions]="{standalone: true}">
+                <option *ngFor="let key of UniqueAttributes" [value]="key">{{ key }}
+                </option>
+            </select>
+        </span>
+        <!-- <label>Key</label>
+                                        <input type="text" [(ngModel)]="newKey" [ngModelOptions]="{standalone: true}" /> -->
+        <span
+            style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; flex: 1;">
+            <label class="form-label medium" style="text-wrap:nowrap">Value Type<span
+                    style="color: red;font-size: 12px;">
+                    {{newValueType == "" ? '* Required' : ''}}
+                </span></label>
+            <select style="width: 100%;" class="custom-select" [(ngModel)]="ExistingValueType"
+                [ngModelOptions]="{standalone: true}">
+                <option *ngFor="let type of valueTypes" [value]="type">{{ type }}
+                </option>
+            </select>
+        </span>
+
+        <!-- <label>Value Type</label>
+                                        <select [(ngModel)]="newValueType" [ngModelOptions]="{standalone: true}">
+                                            <option *ngFor="let type of valueTypes" [value]="type">{{ type }}</option>
+                                        </select> -->
+        <span
+            style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; flex: 1;">
+            <label class="form-label medium" style="text-wrap:nowrap">Value<span style="color: red;font-size: 12px;">
+                    {{newValue == "" ? '* Required' : ''}}
+                </span></label>
+            <ng-container [ngSwitch]="ExistingValueType">
+                <input style="width: 100%;" class="i2v-input primary-default medium" placeholder="Enter Value"
+                    *ngSwitchCase="'String'" type="text" [(ngModel)]="ExistingValue"
+                    [ngModelOptions]="{standalone: true}" />
+                <input style="width: 100%;" class="i2v-input primary-default medium" placeholder="Enter Value"
+                    *ngSwitchCase="'Number'" type="number" [(ngModel)]="ExistingValue"
+                    [ngModelOptions]="{standalone: true}" />
+                <select style="width: 100%;" class="custom-select" *ngSwitchCase="'Boolean'" [(ngModel)]="ExistingValue"
+                    [ngModelOptions]="{standalone: true}">
+                    <option selected [value]="true">True</option>
+                    <option [value]="false">False</option>
+                </select>
+            </ng-container>
+        </span>
+
+        <!-- <label>Value</label>
+                                        <ng-container [ngSwitch]="newValueType">
+                                            <input *ngSwitchCase="'String'" type="text" [(ngModel)]="newValue"
+                                                [ngModelOptions]="{standalone: true}" />
+                                            <input *ngSwitchCase="'Number'" type="number" [(ngModel)]="newValue"
+                                                [ngModelOptions]="{standalone: true}" />
+                                            <select *ngSwitchCase="'Boolean'" [(ngModel)]="newValue"
+                                                [ngModelOptions]="{standalone: true}">
+                                                <option [value]="true">True</option>
+                                                <option [value]="false">False</option>
+                                            </select>
+                                        </ng-container> -->
+        <div style="display: flex; align-items: flex-end;">
+            <button class="flex-row-center-center i2v-btn-icon tertiary-default large" libSvgElement
+                [appSvg]="'assets/Outline/plus.svg'"
+                (click)="addAttribute(ExistingKey, ExistingValueType, 'equals', ExistingValue)"></button>
+        </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+        <ng-container *ngIf="AttributeArray.controls.length == 0">
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px;">
+                <span style="flex: 1; font-size: 16px; font-weight: bold;">No Attributes To Searched</span>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="AttributeArray.controls.length > 0">
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px;">
+                <span style="flex: 1; font-size: 16px; font-weight: bold;">Attributes To Be Searched</span>
+            </div>
+            <ng-container *ngFor="let group of AttributeArray.controls; let i = index" formArrayName="attributes">
+                <div [formGroupName]="i"
+                    style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px;">
+                    <input style="width: 100%;" class="i2v-input primary-default medium" placeholder="Enter Key"
+                        formControlName="key" />
+
+                    <select style="width: 100%;" class="custom-select" placeholder="Select Condition"
+                        formControlName="condition">
+                        <option *ngFor="let conditon of conditions[group.get('valueType').value]" [value]="conditon">{{
+                            conditon }}</option>
+                    </select>
+
+                    <ng-container [ngSwitch]="group.get('valueType').value">
+                        <input style="width: 100%;" class="i2v-input primary-default medium" placeholder="Enter Value"
+                            *ngSwitchCase="'String'" type="text" formControlName="value" />
+                        <input style="width: 100%;" class="i2v-input primary-default medium" placeholder="Enter Value"
+                            *ngSwitchCase="'Number'" type="number" formControlName="value" />
+                        <select style="width: 100%;" class="custom-select" *ngSwitchCase="'Boolean'"
+                            placeholder="Enter Value" formControlName="value">
+                            <option selected [value]="true">True</option>
+                            <option [value]="false">False</option>
+                        </select>
+                    </ng-container>
+                    <button class="flex-row-center-center i2v-btn-icon tertiary-default large" libSvgElement
+                        [appSvg]="'assets/Outline/trash.svg'" (click)="removeAttribute(i)"></button>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+
+</form>

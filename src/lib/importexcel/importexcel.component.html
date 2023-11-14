@@ -1,0 +1,29 @@
+<div style="margin-bottom: 20px;">
+    <div style="color: black; margin-bottom: 6px;font-weight: 600;">Upload Excel File And start Enrolling Persons</div>
+    <label style="position: relative;padding-right:3px;">
+        <input (change)="uploadExcelToServerForEnrollment($event);" type="file" />
+    </label>
+</div>
+<div>
+    <mat-form-field style="width:100%;padding-right:4px;margin-top:10px;">
+        <input matInput name="filepath" placeholder="Enter  filepath" type="text" min="1" [(ngModel)]="filepath" />
+
+    </mat-form-field>
+
+    <mat-checkbox  [(ngModel)]="base64">Base64</mat-checkbox>
+
+    <p>No. of Person Enrolled : {{updatedRows}}</p>
+
+    <div style="display:flex;width:100%;justify-content:space-around;margin-top: 20px;">
+        <button mat-raised-button color="primary" (click)="uploadfilepathAndEnrollingStart()">
+            Add ExcelFilePath
+        </button>
+        <button mat-raised-button color="primary" (click)="DownloadTemplate()" style="margin: 0px 20px;">
+            <i class="fa fa-download"></i> Download Template
+        </button>
+        <button mat-raised-button style="background-color: rgb(211, 44, 44);color: wheat;" (click)="close()">
+            Close
+        </button>
+    </div>
+</div>
+<mat-spinner *ngIf="loading" style="position:absolute;top:45%;left:45%"></mat-spinner>

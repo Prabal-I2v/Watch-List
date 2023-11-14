@@ -1,0 +1,50 @@
+.grid-kendo{
+    height: 100%;
+}
+::ng-deep .k-grid td.k-state-selected, .k-grid tr.k-state-selected{
+    background: var(--blue-light-100, #E5F6FF) !important ;
+}
+::ng-deep .k-grid {
+    border: 1px solid var(--grey-light-lavender-mist, #E6EBF2) !important;
+    background: var(--white-100, #FFF) !important;
+}
+::ng-deep .k-grid td {
+    border-width: 0 0 1px 1px;
+    vertical-align: middle;
+}
+::ng-deep .k-column-title {
+    color: var(--grey-light-300, #384157) !important;
+    font-size: 14px;
+font-style: normal;
+font-weight: 600 !important;
+line-height: normal !important;
+    min-width: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 1;
+    overflow: hidden;
+}
+
+
+::ng-deep .k-grid tr.k-alt {
+    background: var(--white-100, #FFF) ;
+}
+
+::ng-deep .k-grid tbody tr:not(.k-detail-row):hover,
+.k-grid tbody tr:not(.k-detail-row).k-state-hover {
+    background: var(--blue-light-100, #E5F6FF) !important;
+}
+
+::ng-deep .k-grid .k-grid-content-locked .k-state-selected td {
+    background: var(--blue-light-100, #E5F6FF) !important;
+}
+
+::ng-deep .k-grid .k-grid-content-locked .k-state-selected.k-alt td {
+    background: var(--blue-light-100, #E5F6FF) !important;
+}
+
+::ng-deep .k-grid .k-grid-content-locked .k-state-selected:hover td,
+.k-grid .k-grid-content-locked .k-state-selected.k-state-hover td {
+    background: var(--blue-light-100, #E5F6FF) !important;
+}
+

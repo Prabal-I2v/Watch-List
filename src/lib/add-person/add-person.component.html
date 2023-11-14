@@ -1,0 +1,140 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar class="mat-accent m-0">
+        <mat-toolbar-row style="display:flex;flex-direction:row;justify-content:space-between">
+            <span class="title dialog-title">Add Person</span>
+            <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div mat-dialog-content
+        style="overflow:auto;padding-bottom:0px !important;  padding-top:15px !important;user-select:none">
+        <form *ngIf="!multipleUpload && !takeNames" name="Parameters" style="display:flex;flex-direction:column"
+            #PersonForm="ngForm">
+            <div *ngIf="!uploaded" style="display:flex;flex-direction:row;width:100%;justify-content:center">
+                <span style="padding:12px;font-size:18px">Select a File to Continue</span>
+            </div>
+            <div *ngIf="uploaded" style="display:flex;flex-direction:row;width:100%;justify-content:space-between">
+                <span style="padding:12px;font-size:18px">File Uploaded</span>
+                <button mat-raised-button color="primary" (click)="changeFile()" style="height:41px;margin:4px">Change
+                    File</button>
+            </div>
+            <div *ngIf="!uploaded" class="txtArea w-100-p" (drop)="dropHandler($event);"
+                (dragover)="dragOverHandler($event);">
+                <div style="margin:10px;color:lightblue;">
+                    <svg (click)="onIconClick()" style="cursor:pointer;fill:cadetblue;height:30px" class="box__icon"
+                        xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43">
+                        <path
+                            d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z" />
+                    </svg>
+                </div>
+                <label for="upload">
+                    <strong id="fileName" class="chooseFile">Choose a File </strong>
+                    <input (change)="fileChange($event);" type="file" id="upload" style="display:none" accept="image/*">
+                </label>
+                <span id="dragLabel"> or drag it here</span>
+            </div>
+            <img *ngIf="uploaded && !multipleUpload" [src]="personImage" style="height:320px" />
+        </form>
+        <form *ngIf="multipleUpload && !takeNames" name="Parameters"
+            style="display:flex;flex-direction:column; justify-content: center; flex-direction: column; padding: 0px 0px 20px 0px; gap: 10px; width: 100%;"
+            #PersonForm="ngForm">
+            <div *ngIf="!multipleUploadStarted && !multipleUploadCompleted">
+                <div *ngIf="!uploaded" style="display:flex;flex-direction:row;width:100%;justify-content:center">
+                    <span style="padding:12px;font-size:18px">Select Files to Continue</span>
+                </div>
+                <div *ngIf="!uploaded" class="txtArea w-100-p" (drop)="dropHandler($event);"
+                    (dragover)="dragOverHandler($event);">
+                    <div style="margin:10px;color:lightblue;">
+                        <svg (click)="onIconClick()" style="cursor:pointer;fill:cadetblue;height:30px" class="box__icon"
+                            xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43">
+                            <path
+                                d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z" />
+                        </svg>
+                    </div>
+                    <label for="upload">
+                        <strong id="fileName" class="chooseFile">Choose upto 100 Files </strong>
+                        <input (change)="fileChange($event);" type="file" id="upload" style="display:none" multiple
+                            accept="image/*">
+                    </label>
+                    <span id="dragLabel"> or drag it here</span>
+                </div>
+                <div style="display:flex;flex-direction:column; align-items: center; justify-content: center; flex-direction: column; width: 100%; gap: 20px;">
+                    <span>or</span>
+                    <div style="width: 100px;">
+                        <select class="custom-select" placeholder="Select Folder" (change)="selectFolder($event)">
+                            <option value="" disabled selected>Select Folder</option>
+                            <option *ngFor="let folder of uploadedFolders"
+                                [value]="folder">{{folder}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="multipleUploadStarted && !multipleUploadCompleted"
+                style="display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px;">
+                <span style="padding:12px;font-size:18px">Files are Uploading</span>
+                <mat-spinner diameter="40" style="margin-right: 10px;"></mat-spinner>
+            </div>
+            <div *ngIf="!multipleUploadStarted && multipleUploadCompleted">
+                <span style="padding:12px;font-size:18px">{{result}}</span>
+            </div>
+        </form>
+        <form *ngIf="takeNames" name="Parameters" style="display:flex;flex-direction:column" #PersonForm="ngForm">
+            <div *ngFor="let embedding of embeddings;let index = index"
+                style="display:flex;flex-direction:row;overflow:auto;padding:8px;margin-top:12px;">
+                <img [src]="'data:image/png;base64,' + embedding.img"
+                    style="width:100px;height:100px;margin-right:24px" />
+                <div
+                    style="display:flex;flex-direction:column;justify-content:center;height:100px;width:calc(90% - 120px)">
+                    <input [name]="'name' + index" placeholder="Name" [(ngModel)]="embedding.name"
+                        style="height:40px;" />
+                </div>
+                <div style="display:flex;flex-direction:column;justify-content:center;height:100px;width:10%">
+                    <button mat-icon-button color="primary"
+                        (click)="removeImage(index)"><mat-icon>cancel</mat-icon></button>
+                </div>
+            </div>
+
+        </form>
+        <div *ngIf="!multipleUploadStarted && !multipleUploadCompleted"
+            style="display: flex; justify-content: space-around; gap: 20px;">
+            <!-- <mat-checkbox *ngIf="!multipleUpload" name="GeneralCheck" [(ngModel)]="fullImageAsFace">Consider Full Image as Face</mat-checkbox> -->
+            <mat-checkbox name="multipleUploadCheck" [(ngModel)]="multipleUpload">Upload Multiple Photos</mat-checkbox>
+            <mat-checkbox *ngIf="multipleUpload" name="multipleUploadCheck" [(ngModel)]="multiplePhotoUpload">Person With Multiple
+                Photos</mat-checkbox>
+        </div>
+
+    </div>
+    <div mat-dialog-actions
+        style="display: flex; flex-direction: row-reverse; justify-content: space-between; border-top: 1px solid gainsboro">
+
+        <div *ngIf="!multipleUpload">
+            <!-- <button *ngIf="!takeNames && !isLoading" mat-raised-button (click)="next()" [disabled]="!uploaded"
+                color="primary" aria-label="NEXT" style="margin:0 8px">
+                Next
+            </button> -->
+
+            <!-- <button *ngIf="takeNames && !isLoading" mat-raised-button (click)="back()" color="primary" aria-label="NEXT"
+                style="margin:0 8px">
+                Back
+            </button> -->
+            <!-- <button *ngIf="takeNames && !isLoading && !multipleUploadStarted && !multipleUploadCompleted" mat-raised-button (click)="save()" color="primary" aria-label="NEXT"
+                style="margin:0 8px">
+                Save
+            </button> -->
+            <mat-spinner *ngIf="isLoading" diameter="40" style="margin-right: 10px;"></mat-spinner>
+        </div>
+        <!-- <div *ngIf="multipleUpload && !multipleUploadStarted && !multipleUploadCompleted">
+            <button *ngIf="!takeNames && !isLoading" mat-raised-button (click)="AddPersonInBatch()" color="primary" aria-label="Close" style="margin:0 8px">
+                Add
+            </button>
+        </div> -->
+        <div *ngIf="multipleUpload">
+            <button *ngIf="!takeNames && !isLoading" mat-raised-button (click)="dialogRef.close()"
+                [disabled]="!uploaded" color="primary" aria-label="Close" style="margin:0 8px">
+                Close
+            </button>
+        </div>
+
+    </div>
+</div>

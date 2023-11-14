@@ -1,0 +1,181 @@
+
+<div style="height: 100%; display: flex; flex-direction: column;">
+    <div id="watchlist-header-container">
+        <div id="watchList-header-row-selected" [hidden]="this.Grid == undefined || this.Grid?.SelectedRows.length == 0">
+            <div
+            style="display: flex; width: 100%; padding: 8px 16px; align-items: center; gap: 16px; border-bottom: 1px solid #E6EBF2; background: #F2F5FA;">
+            <div style="display: flex; align-items: center; gap: 12px; flex: 1 0 0; ">
+                <span
+                    style="color:  #06283D; font-family: Proxima Nova; font-size: 16px; font-style: normal; font-weight: 400; line-height: normal; display: flex;">
+                    <span *ngIf="AllRowSelected" (click)="selectAll(false)">
+                        All {{this.Grid?.configuration.length}} persons in table selected.
+                    </span>
+                    <span *ngIf="!AllRowSelected"  (click)="selectAll(true)">
+                        {{this.Grid?.SelectedRows.length}} persons on this page selected. 
+                    </span>
+                    &nbsp;
+                    <button style="background: none; " class="i2v-link-btn primary small">
+                        <span *ngIf="AllRowSelected" (click)="selectAll(false)">
+                            Clear Selection
+                        </span>
+                        <span *ngIf="!AllRowSelected"  (click)="selectAll(true)">
+                            Select all {{this.Grid?.configuration.length}} persons in table.
+                        </span>
+                    </button>
+                    
+                </span>
+
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; justify-content: center;">
+                <button *ngIf="getStaticFilterCount>0" class="flex-row-center-center i2v-btn secondary-outline medium left-icon" libSvgElement
+                    [appSvg]="'assets/Outline/plus.svg'" [x-position]="'left'" [size]="'14'" (click)="openFilter()"
+                    [matBadge]="countOfStaticFilter" matBadgePosition="after" [matBadgeColor]="'accent'" >
+                    Filter 
+                </button>
+                <button *ngIf="getStaticFilterCount==0" class="flex-row-center-center i2v-btn secondary-outline medium left-icon" libSvgElement
+                    [appSvg]="'assets/Outline/plus.svg'" [x-position]="'left'" [size]="'14'" (click)="openFilter()">
+                    Filter
+                </button>
+                <button *ngFor="let button of headerButtons" class="flex-row-center-center i2v-btn secondary-outline medium" libSvgElement
+                    [appSvg]="button.icon" [x-position]="'left'" [size]="'14'" [matTooltip]="button.title" (click)="onHeaderButtonClick(button)">
+                    {{ button.name }}
+                </button>
+                <button class="flex-row-center-center i2v-btn-icon secondary-outline medium" libSvgElement
+                        [appSvg]="'assets/Outline/trash.svg'" [size]="'14'" matTooltip="Delete selected" (click)="DeleteSelectedPersons()">
+                </button>
+            </div>
+        </div>
+        </div>
+        <div id="watchList-header-row-unselected" [hidden]="this.Grid != undefined && this.Grid?.SelectedRows.length != 0 && this.Grid?.configuration.length != 0 ">
+            <div
+                style="display: flex; width: 100%; padding: 8px 16px; align-items: center; gap: 16px; border-bottom: 1px solid #E6EBF2; background: #F2F5FA;">
+                <div style="display: flex; align-items: center; gap: 12px; flex: 1 0 0; ">
+                    <span
+                        style="color:  #06283D; font-family: Proxima Nova; font-size: 16px; font-style: normal; font-weight: 600; line-height: normal;">
+                        WatchList
+                    </span>
+                    <button class="flex-row-center-center i2v-btn-icon primary-outline medium left-icon" libSvgElement
+                        [appSvg]="'assets/Outline/plus.svg'" (click)="EnrollPersons()"></button>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; justify-content: center;">
+                    <button *ngIf="getStaticFilterCount>0" class="flex-row-center-center i2v-btn secondary-outline medium left-icon" libSvgElement
+                        [appSvg]="'assets/Outline/plus.svg'" [x-position]="'left'" [size]="'14'" (click)="openFilter()"
+                        [matBadge]="countOfStaticFilter" matBadgePosition="after" [matBadgeColor]="'accent'" >
+                        Filter 
+                    </button>
+                    <button *ngIf="getStaticFilterCount==0" class="flex-row-center-center i2v-btn secondary-outline medium left-icon" libSvgElement
+                        [appSvg]="'assets/Outline/plus.svg'" [x-position]="'left'" [size]="'14'" (click)="openFilter()">
+                        Filter
+                    </button>
+                    <!-- <button class="flex-row-center-center i2v-btn secondary-outline medium" libSvgElement
+                        [appSvg]="'assets/Outline/plus.svg'" [x-position]="'left'" [size]="'14'">
+                        Export
+                    </button> -->
+                    <button class="flex-row-center-center i2v-btn-icon secondary-outline medium" libSvgElement
+                        [appSvg]="'assets/Outline/refresh.svg'" [size]="'14'" (click)="refreshDataButtonClicked(skip)">
+                    </button>
+                </div>
+            </div>
+        </div>
+        <ng-container style="transition: all 1s ease-in;" *ngIf="isFilterOpen">
+            <div
+                style=" display: flex; margin: 12px 16px; padding: 12px; justify-content: flex-end; align-items: flex-end; gap: 16px; align-self: stretch; background: #fff; border-radius: 8px;">
+                <span
+                    style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 4px; flex: 1;">
+                    <label style="width:70%"
+                        style="color:#5C5C5C; font-family: Proxima Nova; font-size: 13px; font-weight: 400; line-height: normal;">Search
+                        by name</label>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 4px; flex: 1; width: 100%">
+                        <input class="i2v-input primary-default medium" style="width: 100%;" name="Label" autocomplete="off"
+                            placeholder="Enter Name" [(ngModel)]="searchByNameText" (keyup.enter)="refreshData(0)">
+                        <button class="flex-row-center-center i2v-btn-icon tertiary-default medium" libSvgElement
+                            [appSvg]="'assets/Outline/search.svg'" (click)="refreshData(0)"></button>
+                    </div>
+                </span>
+                <span
+                    style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 4px; flex: 1;">
+                    <label style="width:70%"
+                        style="color:#5C5C5C; font-family: Proxima Nova; font-size: 13px; font-weight: 400; line-height: normal;">Search
+                        by label</label>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 4px; flex: 1; width: 100%">
+                        <input class="i2v-input primary-default medium" style="width: 100%;" name="Label" autocomplete="off"
+                            placeholder="Enter Name" [(ngModel)]="searchByLabelText" (keyup.enter)="refreshData(0)">
+                        <button class="flex-row-center-center i2v-btn-icon tertiary-default medium" libSvgElement
+                            [appSvg]="'assets/Outline/search.svg'" (click)="refreshData(0)"></button>
+                    </div>
+                </span>
+                <span
+                    style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 4px; flex: 1;">
+                    <label style="width:70%"
+                        style="color:#5C5C5C; font-family: Proxima Nova; font-size: 13px; font-weight: 400; line-height: normal;">Search
+                        by image</label>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 4px; flex: 1; width: 100%">
+                        <div style="display: flex;  flex-direction: column; justify-content: center; align-items: center; height: 32px; width: 100%; border-radius: 4px;  border: 1px dashed var(--grey-light-platinum, #E5E9EC);border-width: 2px"
+                            (click)="onBrowseClick('searchByImage')" (drop)="dropHandler($event);"
+                            (dragover)="dragOverHandler($event);">
+                            <input type="file" accept="image/*" name="searchByImage" id="searchByImage" style="color: #7f7466;"
+                                style="display:none" placeholder="Enter Image" (change)="onFileChange($event)"
+                                (drop)="dropHandler($event);" (dragover)="dragOverHandler($event);" />
+                            <span id="selectedFileName">Select a file to search</span>
+                        </div>
+                        <button for="searchByImage" class="flex-row-center-center i2v-btn secondary-default medium"
+                            (click)="onBrowseClick('searchByImage')">
+                            Browse
+                        </button>
+                    </div>
+        
+                    <!-- <div
+                                style="display: flex; justify-content: center; align-items: flex-start; gap: 4px; flex: 1; width: 100%">
+                                <input type="file" name="searchByImage" id="uplaodImage" style="color: #7f7466;"
+                                    placeholder="Enter Image" s (change)="onFileChange($event)" (drop)="dropHandler($event);"
+                                    (dragover)="dragOverHandler($event);" />
+                                <button for="searchByImage" class="flex-row-center-center i2v-btn secondary-default medium"
+                                    (click)="onBrowseClick('searchByImage')">
+                                    Browse
+                                </button>
+                            </div> -->
+                </span>
+                <span
+                style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 4px;">
+                <button for="filter" class="flex-row-center-center i2v-btn secondary-outline medium left-icon"
+                   libSvgElement [appSvg]="'assets/Outline/filter.svg'" [size]="'14'" (click)="openMoreFilter()">
+                   Search By Attribute
+               </button>
+            </span>
+                <!-- <mat-form-field appearance="outline" style="width:20%">
+                        <mat-label>Search By Name</mat-label>
+                        <input matInput placeholder="Enter Name" [(ngModel)]="searchByNameText">
+                        <button mat-button matSuffix mat-icon-button (click)="refreshData(0)">
+                            <mat-icon matSuffix>search</mat-icon>
+                        </button>
+                    </mat-form-field> -->
+                <!-- <mat-form-field appearance="outline" style="width:20%">
+                        <mat-label>Search By Label</mat-label>
+                        <input matInput placeholder="Enter Label" [(ngModel)]="searchByLabelText">
+                        <button mat-button matSuffix mat-icon-button (click)="refreshData(0)">
+                            <mat-icon matSuffix>search</mat-icon>
+                        </button>
+                    </mat-form-field> -->
+            </div>
+        </ng-container>
+    </div>
+    <div class="watchlist-data-container" style="overflow-x: hidden; height: 100%; flex: 1; display: flex; flex-direction: column; padding: 10px 15px; background-color: #fff;">
+        <div *ngIf="!isWatchlistExist" class="nowatchlistexist">
+            <div class="logo-container large flex-row-center-center i2v-btn-icon tertiary-default" libSvgElement
+                [appSvg]="'assets/Outline/table.svg'" [size]="'48'" [fill-color]="'white'"></div>
+            <span class="major-heading">No data found</span>
+            <span class="minor-heading">Try to adjust your search to find what you’re looking for</span>
+        </div>
+        <lib-kendo-grid *ngIf="isWatchlistExist" class="watchlistexist" style="height:100%" #Grid [idx]="'watchList'" [data]="data" [configuration]="configuration"
+            (onActionButtonClicked)="onActionButtonClicked($event)" (pageChange)="pageChange($event)" (allChecked)="allCheckStatus($event)"></lib-kendo-grid>
+    </div>
+
+    <ng-container *ngIf="loading">
+        <div
+            style="display: flex; width: 360px; flex-direction: column; justify-content: center; align-items: center; gap: 20px; flex: 1; position: fixed; height: 100vh; width: 100vw;">
+            <span
+                style="width: 150px; height: 150px; background: url(assets/gifs/enrollment-progress.gif) no-repeat center;">
+            </span>
+        </div>
+    </ng-container>
+</div>
